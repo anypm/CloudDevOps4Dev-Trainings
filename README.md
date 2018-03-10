@@ -53,7 +53,7 @@ Key take-away:
 操作手册
 
 - [操作手册](session1/README.md)
-- [示例代码](session1/sample-code/README.md)
+- [示例代码](session1/code/)
 
 ## Session 2: Deploying and Scaling Micro services with Docker and Kubernetes on Azure
 
