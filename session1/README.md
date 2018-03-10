@@ -1,6 +1,6 @@
 ## Session 1 - Microsoft Azure & Visual Studio Team Services Overview in Developers prospective
 
-**Lab List**
+**Table of Content**
 
 1. Create an end-to-end DevOps Pipeline by using Azure DevOps Project
 2. Create an end-to-end VSTS Project with VSTS DemoGenerator
@@ -55,7 +55,7 @@ Please follow the instructions from https://almvm.devopshub.cn/labs/vsts/VSTSDem
 5. Continues Integration Build Definition
 6. Continues Deployment Pipeline Release Definition
 
-Here is a quick 3 steps guide for using VSTS DemoGeneator
+Here is a quick 3 steps guide for using **VSTS DemoGeneator**
 
 ![Demo Generator](images/vstsdemogenerator-1.png)
 
@@ -65,17 +65,17 @@ Here is a quick 3 steps guide for using VSTS DemoGeneator
 
 ### Lab 03. Use Visual Studio Code (on Mac) to debug Asp.net Core (C#) Web Application
 
-If you are running a MacBook like me, you will wondering if it's possible to work with the code that we just created by DevOps Project. Because we chosed ASP.NET Core as our Framework, it's possible to use any platform as your development workstation to start coding, debugging and testing your application.
+If you are running a MacBook like me, you will wondering if it's possible to work with the code that we just created by DevOps Project. Because we chose ASP.NET Core as our Framework, it's possible to use any platform as your development workstation to start coding, debugging and testing your application.
 
 From the **DevOps Project Home** page, click on **Repositories** button on the top.
 
 ![](images/devopsproject-07.png)
 
-You will navigate into the VSTS Project that is created for you and git repo is showing up
+You will be navigated into the VSTS Project that is created for you and git repo is showing up
 
 ![](images/devopsproject-08.png)
 
-Now, you can get the repo URL and clone the code to your MacOS.
+Now, you can get the **repo URL** and clone the code to your MacOS.
 
 ![](images/devopsproject-09.png)
 
@@ -83,15 +83,15 @@ Use [Visual Studio Code](https://code.visualstudio.com/) open the git repo, vsco
 
 ![](images/devopsproject-10.png)
 
-When the installation and restoring process finishes, you can navigate to the debug tab and click on the start debugging button.
+When the installation and restoring process finishes, you can navigate to the debug tab and click on the **start debugging** button.
 
 ![](images/devopsproject-11.png)
 
-The Application will run the show up in your browser like this
+The Application will run and show up in your browser like this
 
 ![](images/devopsproject-12.png)
 
-You can even setup a break point in your code and see vscode break into that point, then you can step into your code to view the varibles.
+You can even setup a **break point** in your code and see vscode break into that point, then you can step into your code to view the varibles.
 
 ![](images/devopsproject-13.png)
 
@@ -105,7 +105,7 @@ This could happen because Azure DevOps Project has setup the whole pipeline for 
 
 ![](images/devopsproject-16.png)
 
-If you remember that we chosed Web App with Container when we setup this Azure DevOps Project, you should know that there are Azure Container Registry behind the sense to support our CI/CD pipeline, you can navigate to this ACR from the DevOps Project home page as well to see the container images that we have been built and pushed.
+If you remember that we chose **Web App with Container** when we setup this Azure DevOps Project, you should know that there are **Azure Container Registry** behind the sense to support our CI/CD pipeline, you can navigate to this ACR to see the container images that we have been built and pushed.
 
 ![](images/devopsproject-17.png)
 
@@ -127,9 +127,9 @@ Press **F5** and now you are debugging the same code that we have been using fro
 
 ### Lab05. Create an Azure Function App and integrate with the Web Application
 
-Azure Function is Serverless architecture implmentation on Azure, we can create a Function App with just one file. 
+Azure Function is **Serverless** architecture implmentation on Azure, we can create a **Function App** with just one file.
 
-Create a Function App from Azure Portal
+Create a **Function App** from Azure Portal
 
 ![](images/function-01.png)
 
@@ -144,15 +144,15 @@ Fill up the following infomation and click create
 
 ![](images/function-02.png)
 
-Use Visual Studio to create a Azure Function Project
+Use Visual Studio to create a **Azure Function** Project
 
 ![](images/function-03.png)
 
-Right click the project node and create an new Item, Azure Function, name it UserList.cs
+Right click the project node and create an new Item, Azure Function, name it **UserList.cs**
 
 ![](images/function-04.png)
 
-Choose Http Trigger for the function
+Choose **Http Trigger** for the function
 
 ![](images/function-05.png)
 
@@ -166,7 +166,7 @@ Right click the Project and choose Publish, then choose **Select Existing** for 
 
 ![](images/function-07.png)
 
-Wait for the publishing process to be finished. 
+Wait for the publishing process to be finished.
 
 ![](images/function-08.png)
 
@@ -187,11 +187,11 @@ Now, Let's try to integrate this Azure Function with our DevOps Project Demo cod
 
 Finally, let's close the DevOps Loop by examine the Application Insight Dashboard.
 
-In the DevOps Project Home page, click on Applciation Insight link
+In the **DevOps Project Home** page, click on **Applciation Insight** link
 
 ![](images/AppInsight-01.png)
 
-Then you can explore the Application Insight Dashboard
+Then you can explore the **Application Insight** Dashboard
 
 ![](images/AppInsight-02.png)
 
