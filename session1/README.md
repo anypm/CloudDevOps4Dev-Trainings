@@ -127,3 +127,72 @@ Press **F5** and now you are debugging the same code that we have been using fro
 
 ### Lab05. Create an Azure Function App and integrate with the Web Application
 
+Azure Function is Serverless architecture implmentation on Azure, we can create a Function App with just one file. 
+
+Create a Function App from Azure Portal
+
+![](images/function-01.png)
+
+Fill up the following infomation and click create
+
+|parameter   |value   |description   |
+|---|---|---|
+|App name   |name of the project   |   |
+|Resource Group   |   |   |
+|Hosting Plan   |   |   |
+|Location   |   |   |
+
+![](images/function-02.png)
+
+Use Visual Studio to create a Azure Function Project
+
+![](images/function-03.png)
+
+Right click the project node and create an new Item, Azure Function, name it UserList.cs
+
+![](images/function-04.png)
+
+Choose Http Trigger for the function
+
+![](images/function-05.png)
+
+Use the following code to replace the function code file
+
+- [UserList.cs](code/UserList.cs)
+
+Right click the Project and choose Publish, then choose **Select Existing** for the service, and pick the Function App we just created in Azure Portal.
+
+![](images/function-06.png)
+
+![](images/function-07.png)
+
+Wait for the publishing process to be finished. 
+
+![](images/function-08.png)
+
+Go to Azure Portal, navigate to the Azure Function App and click on **Get Function Url**
+
+![](images/function-09.png)
+
+Copy & Paste the Url into a browser windows, you will see we have a Api Service ready for use
+
+![](images/function-10.png)
+
+Now, Let's try to integrate this Azure Function with our DevOps Project Demo code, use the following files to replace correspodnent code file
+
+- [HomeController.cs](code/HomeController.cs)
+- [index.cshtml](code/index.cshtml)
+
+### Lab06. Use Application Insight to monitor and track telemetry data
+
+Finally, let's close the DevOps Loop by examine the Application Insight Dashboard.
+
+In the DevOps Project Home page, click on Applciation Insight link
+
+![](images/AppInsight-01.png)
+
+Then you can explore the Application Insight Dashboard
+
+![](images/AppInsight-02.png)
+
+To be next time ...
