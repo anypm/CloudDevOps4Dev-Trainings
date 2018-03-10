@@ -65,7 +65,7 @@ Here is a quick 3 steps guide for using **VSTS DemoGeneator**
 
 ### Lab 03. Use Visual Studio Code (on Mac) to debug Asp.net Core (C#) Web Application
 
-If you are running a MacBook like me, you will wondering if it's possible to work with the code that we just created by DevOps Project. Because we chose ASP.NET Core as our Framework, it's possible to use any platform as your development workstation to start coding, debugging and testing your application.
+If you are running a MacBook like me, you will wondering if it's possible to work with the code that we just created by DevOps Project. Because we chose ASP.NET Core as our Framework, it's possible to use any platform as your development workstation to start coding, debugging and testing your application.
 
 From the **DevOps Project Home** page, click on **Repositories** button on the top.
 
