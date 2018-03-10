@@ -50,6 +50,11 @@ Key take-away:
 - 了解Azure云平台中的开发人员效率工具的能力
 - 具备开始使用App Service, Azure Function, DevTest Labs, VSTS和Application Insight开发和运营云端应用的能力
 
+操作手册
+
+- [操作手册](session1/README.md)
+- [示例代码](session1/sample-code/README.md)
+
 ## Session 2: Deploying and Scaling Micro services with Docker and Kubernetes on Azure
 
 ![Session 2: Deploying and Scaling Micro services with Docker and Kubernetes on Azure](images/session2-small.png)
