@@ -181,7 +181,7 @@ Copy & Paste the Url into a browser windows, you will see we have a Api Service 
 Now, Let's try to integrate this Azure Function with our DevOps Project Demo code, use the following files to replace correspodnent code file
 
 - [HomeController.cs](code/HomeController.cs)
-- [index.cshtml](code/index.cshtml)
+- [index.cshtml](code/Index.cshtml)
 
 ### Lab06. Use Application Insight to monitor and track telemetry data
 
