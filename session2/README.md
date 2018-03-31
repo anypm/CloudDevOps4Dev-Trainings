@@ -69,7 +69,7 @@ Install the following Softwares
 
 Docker for Windows supports both Linux and Windows Containers, you can choose which one to use from he context menu.
 
-Note: make sure you are clear which one to use when you are working on your application.
+> Note: make sure you are clear which one to use when you are working on your application.
 
 ![](images/devtestlabs-07.png)
 
@@ -85,7 +85,7 @@ Make sure your tick all the dirves in Shared Drives configuration, this allows y
 
 As we have 16G Ram for the VM, it's ok for allocate more memory for the Docker Container VM. This will allow you to run your application faster.
 
-Note: Docker for Windows in Linux mode will use a MobyLinux VM running in Hyper-V to host a linux VM.
+> Note: Docker for Windows in Linux mode will use a MobyLinux VM running in Hyper-V to host a linux VM.
 
 ![](images/devtestlabs-10.png)
 
@@ -150,7 +150,7 @@ Now, our Azure DevTestLabs VM is ready for containerized application development
 
 ### Lab 03 - Code, Build, Debug & Test Docker Containers on Azure DevTestLabs VMs
 
-Note: The following steps are using Linux Containers.
+> Note: The following steps are using Linux Containers.
 
 **Debug a Asp.Net Core WebApp in Visual Studio and Docker for Windows**
 
@@ -324,20 +324,23 @@ code .
 docker-compose up
 ```
 
-Note: command **code .** will open the application folder in Visual Studo Code for later debugging.
+> Note: command **code .** will open the application folder in Visual Studo Code for later debugging.
 
 Wait a while until you see the cmder window starting showing logs from the containers (with db, result_1, worker_1 as prefix), then your application is up and running, you can open a browser to open the following address:
 
 - Voting Page http://localhost:5000
 - Result Page http://localhost:5001
 
-Note: The first time running linux container on a Windows Machine will trigger a confirmation from Windows Firewall, just click **Allow access**.
+> Note: The first time running linux container on a Windows Machine will trigger a confirmation from Windows Firewall, just click **Allow access**.
+
 ![](images/debugging-01.png)
 
 You can see the voting and result pages are showing up and linux containers are running inside the cmder window.
+
 ![](images/debugging-02.png)
 
 Refer to the architecture of this applicatiob below to understand how easy it is to use docker to run a multiple container micro services system on a single machine, which is impossible without docker.
+
 ![](images/debugging-03.png)
 
 TIP: use the following command to quickly clean up your running and stopped containers. It's very easy to leave a lot of containers running so it's good idea to clean them up from time to time. 
@@ -544,7 +547,7 @@ kubectl get secret regcred --output="jsonpath={.data.\.dockerconfigjson}" | base
 
 Create the following **kube-deploy.yaml** file for deployment of our aspnetcore-dockerlinux:v1 application.
 
-Note: we are referring to the secret by imagePullSecrets configuration.
+> Note: we are referring to the secret by imagePullSecrets configuration.
 
 ```yaml
 apiVersion: apps/v1beta1
@@ -580,7 +583,7 @@ spec:
 
 Run the following command to deploy aspnetcore-dockerlinux:v1 to AKS and get the external IP address of the service.
 
-Note: it will take some time for the 2nd line of service status to be showing up, --watch will keep updating the terminal until this is shown.
+> Note: it will take some time for the 2nd line of service status to be showing up, --watch will keep updating the terminal until this is shown.
 
 ```bash
 ## Deploy to k8s
