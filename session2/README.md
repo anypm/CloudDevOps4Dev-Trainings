@@ -515,6 +515,26 @@ aks-nodepool1-32127511-0   Ready     agent     22m       v1.7.9
 
 ### Labs 06 - Deploy & Scale Application on AKS
 
+**Open Kubernetes Dashboard**
+
+```bash
+az aks browse --resource-group myResourceGroup --name myAKSCluster
+Merged "myAKSCluster" as current context in C:\Users\leixu\AppData\Local\Temp\tmp9m8km6la
+Proxy running on http://127.0.0.1:8001/
+Press CTRL+C to close the tunnel...
+Forwarding from 127.0.0.1:8001 -> 9090
+Handling connection for 8001
+Handling connection for 8001
+Handling connection for 8001
+Handling connection for 8001
+Handling connection for 8001
+```
+
+![](images/aks-04.png)
+
+> Note: Press Ctrl-C to terminate the Dashboard session
+
+
 **Create k8s secret**
 
 As we have our image in a private ACR instance, we need to create K8s secret **regcred** to hold the ACR username and password in order to allow k8s to pull images from our ACR instance.
@@ -658,3 +678,38 @@ Now you can open the webapp v2 from browser using the EXTERNAL-IP field
 http://{EXTERNAL-IP}
 
 ![](images/aks-03.png)
+
+**Deploy voting-azure-devops to AKS**
+
+Open voting-azure-devops/kompose folder and update all <acrname> to be yours in the following files
+
+- vote-deployment.yaml
+- result-deployment.yaml
+- worker-deployment.yaml
+
+Then you can use the following command to deploy to AKS
+
+```bash
+cd voting-azure-devops/kompose
+kubectl create -f .
+```
+
+> Note: I'm using komepose to convert the docker-stack.yml to generate these yaml files for k8s, you can refer to the following link for more details
+> http://kompose.io/
+
+After the deployment, watch the K8s Dashboard and wait the vote and result services are showing up public IPs, then open them in browser to test.
+
+![](images/aks-05.png)
+
+**Scale the agent nodes in AKS**
+
+As we have deployed both aspnetcore-dockerlinux and voting-azure-devops applications to AKS, it make sense to scale the cluster in order to spread out the work load.
+
+```bash
+## Sacle AKS cluster to use 3 agents nodes
+az aks scale --resource-group=myResourceGroup --name=myAKSCluster --node-count 3
+
+## Scale the voting-azure-devops app to use 10 voting nodes
+kubectl scale --replicas=10 deployment/vote
+```
+![](images/aks-06.png)
