@@ -52,8 +52,8 @@ Key take-away:
 
 操作手册
 
-- [操作手册](session1/README.md)
-- [示例代码](session1/code/)
+- [Labs Manual 操作手册](session1/README.md)
+- [Sample Code 示例代码](session1/code/)
 
 ## Session 2: Deploying and Scaling Micro services with Docker and Kubernetes on Azure
 
@@ -76,6 +76,11 @@ Key take-away:
 
 - 深入了解如何使用容器，Docker和Kubernetes让开发人员的日常工作更加高效
 - 深入了解Azure Kubernetes服务所提供的容器编排能力，具备开始使用AKS部署和运行微服务架构应用的基本能力
+
+操作手册
+
+- [Labs Manual 操作手册](session2/README.md)
+- [Sample Code 示例代码](https://github.com/lean-soft/voting-azure-devops)
 
 ## Session 3: Speed up your development with VSTS Continuous Delivery
 

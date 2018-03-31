@@ -1,5 +1,16 @@
 ## Session 1 - Microsoft Azure & Visual Studio Team Services Overview in Developers prospective
 
+Introduce the developer focused features in Microsoft Azure and VSTS, including App Service, Azure Functions, DevTest Labs, DevOps Projects, Resource Manager and Application Insights. The session will be running mainly on demos, showing the capabilities of using VSTS and Visual Studio to build an App to take advantages of above azure features and deliver the code up to the cloud with VSTS release pipeline.
+
+The demo will be starting with creating a DevOps Project in Azure Portal, then start feature planning with Agile Backlogs and coding with Visual Studio Code; we will be adding Azure Functions to pull some data from an external REST API and integrate it with the current application. Finally, we will examine the telemetry data collected by Application Insight to finish the whole DevOps cycle.
+
+![Session 1 - Microsoft Azure & Visual Studio Team Services Overview in Developers prospective](../images/session1-small.png)
+
+Key take-away:
+
+- Understand how Microsoft Azure Platform can help developers to be more efficient
+- Abilities to start exploring the features mentioned in the session, e.g. App Services, Azure Functions, DevTest Lab and Application Insights.
+
 **Table of Content**
 
 1. Create an end-to-end DevOps Pipeline by using Azure DevOps Project

@@ -2,6 +2,8 @@
 
 Focus on the new Azure Kubernetes Service (AKS), dive into the details of build, ship and run a Microservices architecture application using Visual Studio, VSTS and AKS. Starting from coding in a Docker for Windows enabled VM as the development workstation backed by DevTest Lab, then we will commit the code into a VSTS git repo and build up the release pipeline to deliver into a AKS cluster environment. Finally, we will run a rolling update triggered by VSTS release pipeline on AKS to show the capabilities of container based cluster.
 
+![](../images/session2-small.png)
+
 Key take-away:
 
 - Understanding of capabilities of containers, docker and Kubernetes and how to take advantage of these technologies in daily work
