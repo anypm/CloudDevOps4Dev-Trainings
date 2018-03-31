@@ -373,6 +373,7 @@ Get ACR username and password and docker login into it
 ## Get ACR username and password and write it down
 ##  (replace <acrname> with your own name)
 az acr update --name <acrName> --admin-enabled true
+az acr credential show --name <acrName>
 
 ## Use username and password from above to login
 ## (replace <acrname> with your own name)
@@ -420,3 +421,237 @@ Check **Resource Group | myResouceGroup | {acrName} | Repositories** again.
 ![](images/acr-02.png)
 
 Now, we have our images ready for deploy into AKS.
+
+### Lab05 - Setting up Azure Kubernetes Services (AKS) Cluster
+
+Make sure you have run the ACR steps to have your azure-cli login successfully already.
+
+```bash
+## Register Azure service providers because AKS is still in preview
+az provider register -n Microsoft.Network
+az provider register -n Microsoft.Storage
+az provider register -n Microsoft.Compute
+az provider register -n Microsoft.ContainerService
+```
+
+Create AKS cluster with 1 agent
+
+```bash
+## Create AKS
+az aks create --resource-group myResourceGroup --name myAKSCluster --node-count 1 --generate-ssh-keys
+SSH key files 'C:\Users\leixu\.ssh\id_rsa' and 'C:\Users\leixu\.ssh\id_rsa.pub' have been generated under ~/.ssh to allow SSH access to the VM. If using machines without permanent storage like Azure Cloud Shell without an attached file share, back up your keys to a safe location
+{
+  "additionalProperties": {},
+  "agentPoolProfiles": [
+    {
+      "additionalProperties": {},
+      "count": 1,
+      "dnsPrefix": null,
+      "fqdn": null,
+      "name": "nodepool1",
+      "osDiskSizeGb": null,
+      "osType": "Linux",
+      "ports": null,
+      "storageProfile": "ManagedDisks",
+      "vmSize": "Standard_DS1_v2",
+      "vnetSubnetId": null
+    }
+  ],
+  "dnsPrefix": "myAKSClust-myResourceGroup-c5a121",
+  "fqdn": "myaksclust-myresourcegroup-c5a121-32a2a33c.hcp.eastus.azmk8s.io",
+  "id": "/subscriptions/c5a12135-27d6-47fd-a4db-bfbc4e4f5465/resourcegroups/myResourceGroup/providers/Microsoft.ContainerService/managedClusters/myAKSCluster",
+  "kubernetesVersion": "1.7.9",
+  "linuxProfile": {
+    "additionalProperties": {},
+    "adminUsername": "azureuser",
+    "ssh": {
+      "additionalProperties": {},
+      "publicKeys": [
+        {
+          "additionalProperties": {},
+          "keyData": "{removed for security protection}"
+        }
+      ]
+    }
+  },
+  "location": "eastus",
+  "name": "myAKSCluster",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "myResourceGroup",
+  "servicePrincipalProfile": {
+    "additionalProperties": {},
+    "clientId": "558ec528-c7ba-4aba-96f5-076f148019c7",
+    "keyVaultSecretRef": null,
+    "secret": null
+  },
+  "tags": null,
+  "type": "Microsoft.ContainerService/ManagedClusters"
+}
+```
+
+Install kubectl and connect to the cluster, make sure you run cmder as administrator first
+
+![](images/aks-01.png)
+
+```bash
+az aks install-cli
+Downloading client to C:\Program Files (x86)\kubectl.exe from https://storage.googleapis.com/kubernetes-release/release/v1.10.0/bin/windows/amd64/kubectl.exe
+Please ensure that C:\Program Files (x86) is in your search PATH, so the `kubectl.exe` command can be found.
+```
+
+Configure kubectl to connect to aks cluster
+
+```bash
+az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
+Merged "myAKSCluster" as current context in C:\Users\leixu\.kube\config
+
+kubectl get nodes
+NAME                       STATUS    ROLES     AGE       VERSION
+aks-nodepool1-32127511-0   Ready     agent     22m       v1.7.9
+```
+
+### Labs 06 - Deploy & Scale Application on AKS
+
+**Create k8s secret**
+
+As we have our image in a private ACR instance, we need to create K8s secret **regcred** to hold the ACR username and password in order to allow k8s to pull images from our ACR instance.
+
+```bash
+## Create the secret (replace <acrname> <acr-pwd> and <email>)
+kubectl create secret docker-registry regcred --docker-server=<acrname>.azurecr.io --docker-username=<acrname> --docker-password=<acr-pwd> --docker-email=<your-email>
+
+## Inspect the secret
+kubectl get secret regcred --output=yaml
+apiVersion: v1
+data:
+  .dockerconfigjson:
+  {removed for security protection}
+kind: Secret
+metadata:
+  creationTimestamp: 2018-03-31T09:36:56Z
+  name: regcred
+  namespace: default
+  resourceVersion: "3200"
+  selfLink: /api/v1/namespaces/default/secrets/regcred
+  uid: {removed for security protection}
+type: kubernetes.io/dockerconfigjson
+
+## Use the following command to convert the dockerconfigjson to readable format
+kubectl get secret regcred --output="jsonpath={.data.\.dockerconfigjson}" | base64 -d
+```
+
+**Create the deployment for aspnetcore-dockerlinux:v1**
+
+Create the following **kube-deploy.yaml** file for deployment of our aspnetcore-dockerlinux:v1 application.
+
+Note: we are referring to the secret by imagePullSecrets configuration.
+
+```yaml
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: aspnetcore-dockerlinux
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: aspnetcore-dockerlinux
+    spec:
+      containers:
+      - name: aspnetcore-dockerlinux
+        image: <acrname>.azurecr.io/linux/aspnetcore-dockerlinux:v1
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aspnetcore-dockerlinux
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: aspnetcore-dockerlinux
+```
+
+Run the following command to deploy aspnetcore-dockerlinux:v1 to AKS and get the external IP address of the service.
+
+Note: it will take some time for the 2nd line of service status to be showing up, --watch will keep updating the terminal until this is shown.
+
+```bash
+## Deploy to k8s
+kubectl create -f kube-deploy.yaml
+deployment "aspnetcore-dockerlinux" created
+service "aspnetcore-dockerlinux" created
+
+## Get pods status
+kubectl get pods
+NAME                                      READY     STATUS    RESTARTS   AGE
+aspnetcore-dockerlinux-2644745569-hs59j   1/1       Running   0          44s
+
+## Get service external IP
+kubectl get service aspnetcore-dockerlinux --watch
+NAME                     TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+aspnetcore-dockerlinux   LoadBalancer   10.0.127.169   <pending>     80:30830/TCP   51s
+aspnetcore-dockerlinux   LoadBalancer   10.0.127.169   52.170.119.4   80:30830/TCP   2m
+```
+
+Now you can open the webapp from browser using the EXTERNAL-IP field
+
+http://{EXTERNAL-IP}
+
+![](images/aks-02.png)
+
+**Scale the application aspnetcore-dockerlinux:v1**
+
+```bash
+kubectl scale --replicas=5 deployment/aspnetcore-dockerlinux
+deployment "aspnetcore-dockerlinux" scaled
+
+kubectl get pods
+NAME                                      READY     STATUS    RESTARTS   AGE
+aspnetcore-dockerlinux-2644745569-4l10j   1/1       Running   0          16s
+aspnetcore-dockerlinux-2644745569-6d2vk   1/1       Running   0          16s
+aspnetcore-dockerlinux-2644745569-d8k8w   1/1       Running   0          16s
+aspnetcore-dockerlinux-2644745569-hs59j   1/1       Running   0          13m
+aspnetcore-dockerlinux-2644745569-nd3r5   1/1       Running   0          16s
+```
+
+**Update the deployment to aspnetcore-dockerlinux:v2**
+
+```bash
+## Send update command to k8s
+kubectl set image deployment aspnetcore-dockerlinux aspnetcore-dockerlinux=leixuacr.azurecr.io/linux/aspnetcore-dockerlinux:v2
+deployment "aspnetcore-dockerlinux" image updated
+
+## Check the pods (during updating process)
+kubectl get pods
+NAME                                      READY     STATUS              RESTARTS   AGE
+aspnetcore-dockerlinux-2644745569-4l10j   1/1       Running             0          4m
+aspnetcore-dockerlinux-2644745569-6d2vk   1/1       Running             0          4m
+aspnetcore-dockerlinux-2644745569-hs59j   1/1       Running             0          17m
+aspnetcore-dockerlinux-2644745569-nd3r5   1/1       Terminating         0          4m
+aspnetcore-dockerlinux-3298259088-4c99b   0/1       ContainerCreating   0          15s
+aspnetcore-dockerlinux-3298259088-89cpb   0/1       ContainerCreating   0          15s
+aspnetcore-dockerlinux-3298259088-c0pzg   1/1       Running             0          15s
+aspnetcore-dockerlinux-3298259088-kbqvz   0/1       ContainerCreating   0          8s
+
+## Check the pods (update is done)
+kubectl get pods
+NAME                                      READY     STATUS    RESTARTS   AGE
+aspnetcore-dockerlinux-3298259088-4c99b   1/1       Running   0          47s
+aspnetcore-dockerlinux-3298259088-5tw13   1/1       Running   0          39s
+aspnetcore-dockerlinux-3298259088-89cpb   1/1       Running   0          47s
+aspnetcore-dockerlinux-3298259088-c0pzg   1/1       Running   0          47s
+aspnetcore-dockerlinux-3298259088-kbqvz   1/1       Running   0          40s
+```
+
+Now you can open the webapp v2 from browser using the EXTERNAL-IP field
+
+http://{EXTERNAL-IP}
+
+![](images/aks-03.png)
