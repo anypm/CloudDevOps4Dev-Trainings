@@ -315,7 +315,7 @@ Now, we have 3 instances of 2 version of the application running on the same mac
 
 **Run a multi-container micro-services application**
 
-Get the sample from Github
+Get the sample from Github https://github.com/lean-soft/voting-azure-devops.git
 
 ```bash
 git clone https://github.com/lean-soft/voting-azure-devops.git
