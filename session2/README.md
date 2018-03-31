@@ -285,7 +285,7 @@ microsoft/aspnetcore-build   2.0                 244f6193d21a        7 days ago 
 microsoft/aspnetcore         2.0                 36f6b6bc707a        7 days ago          325MB
 ```
 
-You can see there is aspnetcore-dockerlinux with TAG:v1 available for use. Run the following command to start this container on port 8080 and 80801
+You can see there is aspnetcore-dockerlinux with TAG:v1 available for use. Run the following command to start this container on port 8080 and 8081
 
 ```bash
 C:\Users\leixu\source\repos\aspnet-core-docker-linux
@@ -300,7 +300,7 @@ C:\Users\leixu\source\repos\aspnet-core-docker-linux
 Open browser for both of the address, you can see we have 2 instances of the same application running on different port
 
 - http://localhost:8080
-- http://localhost:8001
+- http://localhost:8081
 
 ![](images/debugging-core-06.png)
 
@@ -363,7 +363,7 @@ az account set --subscription "{subscription id}"
 ## Create resource group
 az group create --name myResourceGroup --location eastus
 
-## Create ACR
+## Create ACR  (replace <acrname> with your own name)
 az acr create --resource-group myResourceGroup --name <acrName> --sku Basic
 ```
 
@@ -371,9 +371,11 @@ Get ACR username and password and docker login into it
 
 ```bash
 ## Get ACR username and password and write it down
+##  (replace <acrname> with your own name)
 az acr update --name <acrName> --admin-enabled true
 
 ## Use username and password from above to login
+## (replace <acrname> with your own name)
 docker login <acrname>.azurecr.io
 Login Succeed
 ```
@@ -381,9 +383,11 @@ Login Succeed
 Tag the images we have created above and push into the ACR
 
 ```bash
+## Tag the images (replace <acrname> with your own name)
 docker tag aspnetcore-dockerlinux:v1 <acrname>.azurecr.io/linux/aspnetcore-dockerlinux:v1
 docker tag aspnetcore-dockerlinux:v2 <acrname>.azurecr.io/linux/aspnetcore-dockerlinux:v2
 
+## Push the images (replace <acrname> with your own name)
 docker push <acrname>.azurecr.io/linux/aspnetcore-dockerlinux:v1
 docker push <acrname>.azurecr.io/linux/aspnetcore-dockerlinux:v2
 ```
@@ -396,12 +400,16 @@ Do the following and publish container images for voting-azure-devops repo
 
 ```bash
 cd voting-azure-devops
+
+## Build images
 docker-compose build
 
+## Tag images (replace <acrname> with your own name)
 docker tag votingazuredevops_vote <acrname>.azurecr.io/linux/vote
 docker tag votingazuredevops_result <acrname>.azurecr.io/linux/result
 docker tag votingazuredevops_worker <acrname>.azurecr.io/linux/worker
 
+## Push images (replace <acrname> with your own name)
 docker push <acrname>.azurecr.io/linux/vote
 docker push <acrname>.azurecr.io/linux/result
 docker push <acrname>.azurecr.io/linux/worker
