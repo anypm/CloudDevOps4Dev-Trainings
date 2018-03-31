@@ -15,7 +15,6 @@ Key take-away:
 4. Setting up Azure Container Registry (ACR) and push images
 5. Setting up Azure Kubernetes Services (AKS) Cluster
 6. Deploy & Scale Application on AKS
-7. Add Windows Nodes into AKS cluster
 
 **Hands-on Lab Instructions**
 
