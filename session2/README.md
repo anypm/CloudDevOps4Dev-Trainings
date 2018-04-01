@@ -841,4 +841,12 @@ kubectl image deployment vote vote=leixuacr.azurecr.io/linux/vote:$(Release.Arti
 
 > Note: (Release.Artifacts.voting-CI.BuildId) will be the artifact BuildID that triggers this release, which is the same version that has been built in the CI. This make sure AKS is updated with the correct image tag.
 
+**Clean up**
+
+Unless you want to keep your AKS for production usage, you need to bring it down after this lab.
+
+```bash
+az aks delete --resource-group myResourceGroup --name myAKSCluster
+```
+
 To be next time ...
