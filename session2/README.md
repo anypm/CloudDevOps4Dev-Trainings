@@ -572,8 +572,8 @@ Create the following **kube-deploy.yaml** file for deployment of our aspnetcore-
 > Note: we are referring to the secret by imagePullSecrets configuration.
 
 ```yaml
-apiVersion: apps/v1beta1
-kind: Deployment
+apiVersion: v1
+kind: ReplicationController
 metadata:
   name: aspnetcore-dockerlinux
 spec:
@@ -634,7 +634,7 @@ http://{EXTERNAL-IP}
 **Scale the application aspnetcore-dockerlinux:v1**
 
 ```bash
-kubectl scale --replicas=5 deployment/aspnetcore-dockerlinux
+kubectl scale --replicas=5 ReplicationControllers/aspnetcore-dockerlinux
 deployment "aspnetcore-dockerlinux" scaled
 
 kubectl get pods
@@ -646,36 +646,49 @@ aspnetcore-dockerlinux-2644745569-hs59j   1/1       Running   0          13m
 aspnetcore-dockerlinux-2644745569-nd3r5   1/1       Running   0          16s
 ```
 
-**Update the deployment to aspnetcore-dockerlinux:v2**
+**Run a Rolling-Update on aspnetcore-dockerlinux:v2**
+
+Get the gcp-live-k8s-visualizer tool in order to visualize the Rolling-Update process
+
+>Note: make sure you stop the Kubernetes Dashboard session before starting this.
+
+```bash
+## Clone gcp-live-k8s-visualizer repo
+git clone https://github.com/ups216/gcp-live-k8s-visualizer.git
+cd gcp-live-k8s-visualizer
+kubectl proxy --www=. --www-prefix=/v/ --api-prefix=/api/
+Starting to serve on 127.0.0.1:8001
+```
+
+Then open browser and navigate to http://127.0.0.1:8001, you should see something like this.
+![](images/aks-07.png)
 
 ```bash
 ## Send update command to k8s
-kubectl set image deployment aspnetcore-dockerlinux aspnetcore-dockerlinux=leixuacr.azurecr.io/linux/aspnetcore-dockerlinux:v2
-deployment "aspnetcore-dockerlinux" image updated
+kubectl rolling-update aspnetcore-dockerlinux --image=leixuacr.azurecr.io/linux/aspnetcore-dockerlinux:v2 --update-period=10s
 
-## Check the pods (during updating process)
-kubectl get pods
-NAME                                      READY     STATUS              RESTARTS   AGE
-aspnetcore-dockerlinux-2644745569-4l10j   1/1       Running             0          4m
-aspnetcore-dockerlinux-2644745569-6d2vk   1/1       Running             0          4m
-aspnetcore-dockerlinux-2644745569-hs59j   1/1       Running             0          17m
-aspnetcore-dockerlinux-2644745569-nd3r5   1/1       Terminating         0          4m
-aspnetcore-dockerlinux-3298259088-4c99b   0/1       ContainerCreating   0          15s
-aspnetcore-dockerlinux-3298259088-89cpb   0/1       ContainerCreating   0          15s
-aspnetcore-dockerlinux-3298259088-c0pzg   1/1       Running             0          15s
-aspnetcore-dockerlinux-3298259088-kbqvz   0/1       ContainerCreating   0          8s
+Created aspnetcore-dockerlinux-2ce6fcbc8dc29f3b159eaca9643a262b
+Scaling up aspnetcore-dockerlinux-2ce6fcbc8dc29f3b159eaca9643a262b from 0 to 5, scaling down aspnetcore-dockerlinux from 5 to 0 (keep 5 pods available, don't exceed 6 pods) Scaling aspnetcore-dockerlinux-2ce6fcbc8dc29f3b159eaca9643a262b up to 1
+Scaling aspnetcore-dockerlinux down to 4
+Scaling aspnetcore-dockerlinux-2ce6fcbc8dc29f3b159eaca9643a262b up to 2
+Scaling aspnetcore-dockerlinux down to 3
+Scaling aspnetcore-dockerlinux-2ce6fcbc8dc29f3b159eaca9643a262b up to 3
+Scaling aspnetcore-dockerlinux down to 2
+Scaling aspnetcore-dockerlinux-2ce6fcbc8dc29f3b159eaca9643a262b up to 4
+Scaling aspnetcore-dockerlinux down to 1
+Scaling aspnetcore-dockerlinux-2ce6fcbc8dc29f3b159eaca9643a262b up to 5
+Scaling aspnetcore-dockerlinux down to 0
+Update succeeded. Deleting old controller: aspnetcore-dockerlinux
+Renaming aspnetcore-dockerlinux-2ce6fcbc8dc29f3b159eaca9643a262b to aspnetcore-dockerlinux
+replicationcontroller "aspnetcore-dockerlinux" rolling updated
 
-## Check the pods (update is done)
-kubectl get pods
-NAME                                      READY     STATUS    RESTARTS   AGE
-aspnetcore-dockerlinux-3298259088-4c99b   1/1       Running   0          47s
-aspnetcore-dockerlinux-3298259088-5tw13   1/1       Running   0          39s
-aspnetcore-dockerlinux-3298259088-89cpb   1/1       Running   0          47s
-aspnetcore-dockerlinux-3298259088-c0pzg   1/1       Running   0          47s
-aspnetcore-dockerlinux-3298259088-kbqvz   1/1       Running   0          40s
 ```
 
-Now you can open the webapp v2 from browser using the EXTERNAL-IP field
+During the process, keep watching on the visualizer, you will notice how the rolling-update process working.
+
+![](images/aks-08.png)
+
+If you use an incongeto browser window to keep refreshing the site, you will hit both versions during the rolling-update process.
 
 http://{EXTERNAL-IP}
 
@@ -683,7 +696,7 @@ http://{EXTERNAL-IP}
 
 **Deploy voting-azure-devops to AKS**
 
-Open voting-azure-devops/kompose folder and update all <acrname> to be yours in the following files
+Open voting-azure-devops/kompose folder and update all {acrname} replaceholder to be yours in the following files
 
 - vote-deployment.yaml
 - result-deployment.yaml
